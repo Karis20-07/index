@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Рамадан — Месяц Света</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --deep: #0A0D1A;
+    --midnight: #0E1228;
+    --ink: #1A1F3A;
+    --cream: #F5EDD8;
+    --rose: #8B3A52;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--deep);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    overflow-x: hidden;
+  }
+
+  /* ── STARS CANVAS ── */
+  #stars {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    z-index: 1;
+    padding: 2rem;
+    overflow: hidden;
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(201,168,76,0.12) 0%, transparent 70%);
+  }
+
+  /* Crescent moon */
+  .moon-wrap {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin-bottom: 2rem;
+    animation: floatMoon 6s ease-in-out infinite;
+  }
+
+  @keyframes floatMoon {
+    0%,100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-14px) rotate(5deg); }
+  }
+
+  .moon {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, var(--gold-light), var(--gold) 50%, #7A5E1A);
+    box-shadow: 0 0 60px rgba(201,168,76,0.6), 0 0 120px rgba(201,168,76,0.2);
+    position: relative;
+  }
+
+  .moon::after {
+    content: '';
+    position: absolute;
+    top: 10px; left: 20px;
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    background: var(--deep);
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+  }
+
+  .star-top {
+    position: absolute;
+    top: 10px; right: 5px;
+    font-size: 2rem;
+    color: var(--gold-light);
+    filter: drop-shadow(0 0 10px var(--gold));
+    animation: twinkle 2s ease-in-out infinite;
+  }
+
+  @keyframes twinkle { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+
+  .cover-arabic {
+    font-family: 'Amiri', serif;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    color: var(--gold);
+    text-shadow: 0 0 40px rgba(201,168,76,0.5);
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    animation: fadeUp 1.2s ease both;
+  }
+
+  .cover-title {
+    font-size: clamp(1.2rem, 4vw, 2rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--cream);
+    opacity: 0.85;
+    margin-top: 0.5rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    animation: fadeUp 1.4s ease both;
+  }
+
+  .cover-sub {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    color: rgba(245,237,216,0.5);
+    letter-spacing: 0.15em;
+    animation: fadeUp 1.6s ease both;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.4;
+    animation: bounceDown 2s ease infinite;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .scroll-hint span { display: block; width: 1px; height: 50px; background: var(--gold); margin: 0 auto; }
+
+  @keyframes bounceDown { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── ORNAMENT DIVIDER ── */
+  .ornament {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    justify-content: center;
+    padding: 1rem 0;
+    color: var(--gold);
+    opacity: 0.6;
+    font-size: 1.2rem;
+  }
+  .ornament::before, .ornament::after {
+    content: '';
+    flex: 1;
+    max-width: 200px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+
+  /* ── SECTIONS ── */
+  .section {
+    position: relative;
+    z-index: 1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+
+  .section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .chapter-num {
+    font-family: 'Amiri', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.7;
+    margin-bottom: 0.5rem;
+  }
+
+  .section h2 {
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 600;
+    color: var(--gold-light);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+  }
+
+  .section p {
+    font-size: 1.2rem;
+    line-height: 1.9;
+    color: rgba(245,237,216,0.88);
+    margin-bottom: 1.2rem;
+    font-weight: 300;
+  }
+
+  /* pull quote */
+  blockquote {
+    border-left: 2px solid var(--gold);
+    margin: 2.5rem 0;
+    padding: 1rem 2rem;
+    background: rgba(201,168,76,0.05);
+    border-radius: 0 8px 8px 0;
+  }
+
+  blockquote p {
+    font-style: italic;
+    font-size: 1.35rem !important;
+    color: var(--gold-light) !important;
+  }
+
+  blockquote cite {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: rgba(201,168,76,0.6);
+    letter-spacing: 0.2em;
+  }
+
+  /* ritual cards */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin: 2.5rem 0;
+  }
+
+  .card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 12px;
+    padding: 1.8rem 1.5rem;
+    text-align: center;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(201,168,76,0.6);
+    box-shadow: 0 20px 60px rgba(201,168,76,0.1);
+  }
+
+  .card-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .card h3 { font-size: 1.1rem; color: var(--gold-light); margin-bottom: 0.6rem; font-weight: 600; }
+  .card p { font-size: 0.95rem !important; line-height: 1.6; color: rgba(245,237,216,0.65) !important; }
+
+  /* timeline */
+  .timeline { position: relative; padding: 1rem 0; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+  }
+
+  .tl-item {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+    align-items: flex-start;
+  }
+
+  .tl-dot {
+    flex-shrink: 0;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--ink);
+    border: 2px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: 0 0 20px rgba(201,168,76,0.3);
+  }
+
+  .tl-body h4 { font-size: 1.1rem; color: var(--gold-light); margin-bottom: 0.4rem; }
+  .tl-body p { font-size: 1rem !important; color: rgba(245,237,216,0.7) !important; }
+
+  /* ending */
+  .ending {
+    text-align: center;
+    padding: 6rem 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .ending .arabic-big {
+    font-family: 'Amiri', serif;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    color: var(--gold);
+    text-shadow: 0 0 40px rgba(201,168,76,0.4);
+    margin-bottom: 1rem;
+  }
+
+  .ending p {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: rgba(245,237,216,0.6);
+    letter-spacing: 0.1em;
+  }
+
+  .glow-line {
+    width: 80px;
+    height: 2px;
+    background: var(--gold);
+    margin: 2rem auto;
+    box-shadow: 0 0 20px var(--gold);
+    border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="moon-wrap">
+    <div class="moon"></div>
+    <div class="star-top">★</div>
+  </div>
+  <div class="cover-arabic">رَمَضَان</div>
+  <div class="cover-title">Рамадан</div>
+  <div class="cover-sub">Священный месяц · История и Свет</div>
+  <div class="scroll-hint">
+    <span></span>
+    листать вниз
+  </div>
+</div>
+
+<!-- 1 -->
+<div class="section" id="s1">
+  <div class="ornament">✦</div>
+  <div class="chapter-num">Глава первая</div>
+  <h2>Рождение Рамадана</h2>
+  <p>В самом начале было Слово — и Слово снизошло в ночи. Девятый месяц лунного календаря, Рамадан, занимает особое место в исламе не случайно: именно в одну из его ночей пророк Мухаммад ﷺ получил первые аяты Корана.</p>
+  <p>Это произошло в горе Хира близ Мекки, около 610 года н. э. Архангел Джибриль (Гавриил) явился перед пророком и произнёс: <em>«Икра» — Читай!»</em> Так началось Откровение, изменившее мир.</p>
+  <blockquote>
+    <p>«Месяц Рамадан — тот, в котором был ниспослан Коран как руководство для людей»</p>
+    <cite>— Сура Аль-Бакара, 2:185</cite>
+  </blockquote>
+  <p>С тех пор Рамадан стал символом близости человека к Богу — временем, когда небо опускается ниже, а сердца открываются шире.</p>
+</div>
+
+<!-- 2 -->
+<div class="section" id="s2">
+  <div class="ornament">✦</div>
+  <div class="chapter-num">Глава вторая</div>
+  <h2>Пять столпов и пост</h2>
+  <p>Ислам держится на пяти основах — «аркан аль-ислам». Пост в Рамадан, <em>саум</em>, является четвёртым из них. Каждый взрослый мусульманин, способный держать пост, обязан воздерживаться от еды, питья и страстей от рассвета до заката на протяжении всех тридцати дней.</p>
+  <p>Но пост — это не просто голод. Это очищение. Арабское слово <em>саум</em> означает «остановка». Остановиться, замолчать, прислушаться — к себе и к Вселенной.</p>
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">🌅</div>
+      <h3>Сухур</h3>
+      <p>Утренняя трапеза до азана на фаджр. Пророк говорил: «В сухуре — благодать».</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🌙</div>
+      <h3>Ифтар</h3>
+      <p>Разговение после заката. По сунне — финиками и водой. Первый глоток — священный момент.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🤲</div>
+      <h3>Таравих</h3>
+      <p>Особые ночные молитвы Рамадана, во время которых читается весь Коран.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">💛</div>
+      <h3>Закят аль-Фитр</h3>
+      <p>Обязательная милостыня в конце месяца — чтобы никто не встретил Ид голодным.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 3 -->
+<div class="section" id="s3">
+  <div class="ornament">✦</div>
+  <div class="chapter-num">Глава третья</div>
+  <h2>Ночь Могущества — Лейлат аль-Кадр</h2>
+  <p>В последнюю десятидневку Рамадана скрыта жемчужина: <em>Лейлат аль-Кадр</em> — Ночь Предопределения. По слову Корана, она <em>«лучше тысячи месяцев»</em>. Поклонение в эту единственную ночь равно более восьмидесяти годам непрерывной молитвы.</p>
+  <p>Точная дата сокрыта — говорят, что это нечётные ночи: 21-я, 23-я, 25-я, 27-я или 29-я. Верующие проводят в мечетях ночи напролёт, читая Коран и взывая к Богу. Воздух как будто меняется — становится тихим, почти осязаемым.</p>
+  <blockquote>
+    <p>«В ту ночь ангелы и Дух нисходят с дозволения Господа... Мир — до самого рассвета»</p>
+    <cite>— Сура Аль-Кадр, 97:4–5</cite>
+  </blockquote>
+</div>
+
+<!-- 4 -->
+<div class="section" id="s4">
+  <div class="ornament">✦</div>
+  <div class="chapter-num">Глава четвёртая</div>
+  <h2>День за днём: ритм Рамадана</h2>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot">🌑</div>
+      <div class="tl-body">
+        <h4>Полночь — до рассвета</h4>
+        <p>Время для тахаджуда — добровольной ночной молитвы. Тишина перед тишиной. Многие просыпаются в 3–4 утра, чтобы успеть поесть на сухур и обратиться к Аллаху в самые интимные часы.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">🌄</div>
+      <div class="tl-body">
+        <h4>Фаджр — рассвет</h4>
+        <p>Азан разрезает ночь. Начинается пост. Город ещё дремлет, но тысячи уже встали на молитву.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">☀️</div>
+      <div class="tl-body">
+        <h4>Зухр и Аср — дневные молитвы</h4>
+        <p>День течёт медленнее. Меньше слов. Больше терпения. Коллеги, соседи, незнакомцы — все как будто добрее.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">🌇</div>
+      <div class="tl-body">
+        <h4>Магриб — закат</h4>
+        <p>Азан — и столы накрываются. Финики, молоко, суп. Семьи собираются вместе. Ифтар — это не просто еда, это воссоединение.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">🌙</div>
+      <div class="tl-body">
+        <h4>Иша и Таравих — ночь</h4>
+        <p>Мечети полны. Хафизы нараспев читают Коран. Ряды молящихся тянутся на улицу. Рамадан — это когда мир чувствует себя единым.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5 -->
+<div class="section" id="s5">
+  <div class="ornament">✦</div>
+  <div class="chapter-num">Глава пятая</div>
+  <h2>Рамадан в разных землях</h2>
+  <p>От Марокко до Индонезии, от Казани до Каира — полтора миллиарда людей одновременно держат пост. Но каждый народ привносит свои краски.</p>
+  <p>В <strong style="color:var(--gold-light)">Египте</strong> горят фонари <em>фанус</em> — разноцветные, расписные. Дети носятся с ними по улицам, напевая старинные песни. В <strong style="color:var(--gold-light)">Турции</strong> барабанщик-мешарги обходит квартал глубокой ночью, чтобы разбудить на сухур. В <strong style="color:var(--gold-light)">Иране</strong> столы ломятся от харириса и халвы. В <strong style="color:var(--gold-light)">Центральной Азии</strong> в чайханах подают самсу и ароматный чай.</p>
+  <p>Рамадан везде разный — и повсюду одинаковый. Потому что его суть не в еде и не в традициях. Его суть — в сердце.</p>
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">🏮</div>
+      <h3>Египет</h3>
+      <p>Фонари фанус, улицы-ярмарки, звон колоколов мечетей и запах кунафы.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🥁</div>
+      <h3>Турция</h3>
+      <p>Барабанщики на улицах, пахлава и гозлеме, вечерний Стамбул в золоте огней.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🍚</div>
+      <h3>Центральная Азия</h3>
+      <p>Самса, плов, катык. Семьи за дастарханом, тихие молитвы стариков.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 6 -->
+<div class="section" id="s6">
+  <div class="ornament">✦</div>
+  <div class="chapter-num">Глава шестая</div>
+  <h2>Ид аль-Фитр — праздник разговения</h2>
+  <p>В последнюю ночь Рамадана мусульмане смотрят на небо в поисках серпа новой луны. Её появление означает конец поста и начало <em>Ид аль-Фитр</em> — «Праздника разговения», одного из двух главных праздников ислама.</p>
+  <p>Утром люди надевают лучшие одежды и идут на праздничную молитву. Дети получают подарки и деньги — <em>иди</em>. Столы ломятся. Соседи обнимаются. Старые обиды прощаются. Это день радости и благодарности.</p>
+  <blockquote>
+    <p>«Тому, кто постился из веры и в надежде на награду, прощаются все прошлые грехи»</p>
+    <cite>— Хадис пророка ﷺ, Бухари и Муслим</cite>
+  </blockquote>
+  <p>Тридцать дней смирения, молитвы и очищения заканчиваются — и человек выходит обновлённым. Словно луна, которая исчезла и снова народилась.</p>
+</div>
+
+<!-- ENDING -->
+<div class="ending">
+  <div class="ornament">✦ ✦ ✦</div>
+  <div class="arabic-big">رَمَضَان كَرِيم</div>
+  <div class="glow-line"></div>
+  <p>Рамадан Карим — Щедрый Рамадан</p>
+</div>
+
+<script>
+// ── STARS ──
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+let stars = [];
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+for (let i = 0; i < 220; i++) {
+  stars.push({
+    x: Math.random(),
+    y: Math.random(),
+    r: Math.random() * 1.4 + 0.3,
+    a: Math.random(),
+    speed: Math.random() * 0.008 + 0.003,
+    phase: Math.random() * Math.PI * 2,
+  });
+}
+
+function drawStars() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const t = Date.now() / 1000;
+  stars.forEach(s => {
+    const alpha = s.a * 0.7 * (0.5 + 0.5 * Math.sin(t * s.speed * 10 + s.phase));
+    ctx.beginPath();
+    ctx.arc(s.x * canvas.width, s.y * canvas.height, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(232,201,122,${alpha})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+drawStars();
+
+// ── SCROLL REVEAL ──
+const sections = document.querySelectorAll('.section');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
